@@ -118,7 +118,6 @@ class Superset:
                 break
             
             self._refresh_token()
-           
 
         csrf_token = csrf_res.json()['result']
         session.headers['Referer']= csrf_url
@@ -128,7 +127,7 @@ class Superset:
         #res = requests.request(method, url, headers=self._headers(**headers), **request_kwargs)
         res = session.request(method, url, **request_kwargs)
 
-        logger.debug("Request finished with status: %d", res.status_code)
+        logger.debug("Request finished with status: %d and content: %s", res.status_code, res.content)
 
         res.raise_for_status()
         return res.json()
