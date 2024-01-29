@@ -156,8 +156,8 @@ def merge_columns_info(dataset, dbt_tables, debug_dir):
     for sst_column in sst_columns:
 
         # add the mandatory field
-        column_name = sst_column['column_name']
-        column_new = {'column_name': column_name}
+        column_name = sst_column['column_name'].lower()
+        column_new = {'column_name': column_name.upper()}
 
         # Note: type_generic and created_on cannot be included, apparently.
         preserve_fields_list = [
@@ -274,7 +274,7 @@ def main(dbt_project_dir, dbt_db_name, superset_db_id, superset_debug_dir, super
     # Register them
     for table in tables_to_register:
         try:
-            superset.register_dataset_in_superset(superset_db_id, table, superset_debug_dir)
+            superset.create_physical_dataset(superset_db_id, table)
         except Exception as e:
             logging.error("The database table %s could not be registered. %s",
                           table, e.response.json()['message'])

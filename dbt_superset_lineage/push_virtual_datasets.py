@@ -28,12 +28,14 @@ def main(datasets_dir, superset_db_id, superset_refresh_columns, superset):
             with open(os.path.join(datasets_dir, yml_filename), 'r') as y, open(os.path.join(datasets_dir, sql_filename), 'r') as s:
                 yaml_data = yaml.safe_load(y)
                 input_datasets[noext_filename] = yaml_data
+                if 'columns' not in input_datasets[noext_filename]:
+                    input_datasets[noext_filename]['columns'] = []
                 input_datasets[noext_filename]["sql"] = s.read()                
 
     for i in input_datasets:
         # refresh columns
         superset.refresh_dataset(i)
-
+        
         # get columns from dataset definition
         columns_from_yml = { x['name'].upper() : x for x in input_datasets[i]['columns'] }
 
@@ -45,7 +47,7 @@ def main(datasets_dir, superset_db_id, superset_refresh_columns, superset):
             if ds_id is None:
                 logging.error("The dataset %s.%s does not exist in Superset. Please check your propagate_columns_from section in %s.yml.", j['schema'], j['table'], i)
                 continue
-            cols = { x['column_name'].upper() : x['description'] for x in superset.get_columns(ds_id)['columns'] if x.get('description') is not None}
+            cols = { x['column_name'].upper() : x for x in superset.get_columns(ds_id)['columns'] if x.get('description') is not None}
             columns_from_propagation |= cols
 
         # get columns from superset's dataset
@@ -55,10 +57,13 @@ def main(datasets_dir, superset_db_id, superset_refresh_columns, superset):
 
         for c in columns_from_ds:
             if c['column_name'] in columns_from_propagation:
-                c['description'] = columns_from_propagation[i['column_name']]['description']
+                c['description'] = columns_from_propagation[c['column_name']]['description']
                 
                 if c['type'] is None:
-                    c['type'] = columns_from_propagation[i['column_name']]['type']                
+                    c['type'] = columns_from_propagation[c['column_name']]['type']
+                
+                if c['verbose_name'] is None:
+                    c['verbose_name'] = columns_from_propagation[c['column_name']]['verbose_name']
                 
             if c['column_name'] in columns_from_yml:
                 c |= columns_from_yml[c['column_name']]

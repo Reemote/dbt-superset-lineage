@@ -215,5 +215,5 @@ class Superset:
     def update_virtual_dataset(self, dataset_id, dataset):
         logging.info("Updating dataset %s.", str(dataset_id))
         override_columns = dataset and len(dataset.get('columns', []))>0
-        print(json.dumps(dataset))
+       
         self._request('PUT', f"/dataset/{dataset_id}?override_columns={override_columns}", json=dataset)
