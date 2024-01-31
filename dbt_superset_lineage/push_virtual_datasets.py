@@ -2,14 +2,21 @@ import json
 import logging
 import os
 import yaml
-import .helpers
 from bs4 import BeautifulSoup
 from markdown import markdown
 from .superset_api import Superset
 import os
 
 logging.basicConfig(level=logging.INFO)
-  
+
+def get_dataset_id_by_schema_table(datasets, schema, table):
+    for dataset in datasets:
+        if datasets[dataset]['schema'] == schema and datasets[dataset]['table_name'] == table:
+            return datasets[dataset]['dataset_id']
+    return None
+
+def make_table_name(table, tags):
+    return str(sorted(tags)).replace("'","") + " " + table
 
 
 def main(datasets_dir, superset_db_id, superset_refresh_columns, superset):
