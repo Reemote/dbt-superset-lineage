@@ -5,7 +5,7 @@ import yaml
 import .helpers
 from bs4 import BeautifulSoup
 from markdown import markdown
-from superset_api import Superset
+from .superset_api import Superset
 import os
 
 logging.basicConfig(level=logging.INFO)
