@@ -2,7 +2,7 @@ import json
 import logging
 import os
 import yaml
-import helpers
+import .helpers
 from bs4 import BeautifulSoup
 from markdown import markdown
 from superset_api import Superset
