@@ -1,0 +1,25 @@
+name: build
+
+on:
+    release:
+        types: [published]
+
+env:
+  GOPRIVATE: "github.com/reemote/*"
+  ECR_REGISTRY: 512374753291.dkr.ecr.eu-central-1.amazonaws.com
+  ECR_REPO: data-products/data-platform/superset
+  IMAGE_NAME: superset
+  IMAGE_TAG: ${{ github.event.release.tag_name }}
+
+jobs:
+  build:
+    name: Create release
+    runs-on: ubuntu-latest
+    steps:
+        - name: Build
+          run: |
+            echo "Building release $IMAGE_TAG"
+
+
+
+
