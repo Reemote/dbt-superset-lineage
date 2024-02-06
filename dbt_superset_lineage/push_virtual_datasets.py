@@ -4,7 +4,7 @@ import os
 import yaml
 from bs4 import BeautifulSoup
 from markdown import markdown
-from .superset_api import Superset
+from superset_api import Superset
 import os
 
 logging.basicConfig(level=logging.INFO)
@@ -50,7 +50,7 @@ def main(datasets_dir, superset_db_id, superset_refresh_columns, superset):
         columns_from_propagation = {}
 
         for j in reversed(input_datasets[i].get('propagate_columns_from', [])):
-            ds_id = helpers.get_dataset_id_by_schema_table(datasets_superset, j['schema'], j['table'])
+            ds_id = get_dataset_id_by_schema_table(datasets_superset, j['schema'], j['table'])
             if ds_id is None:
                 logging.error("The dataset %s.%s does not exist in Superset. Please check your propagate_columns_from section in %s.yml.", j['schema'], j['table'], i)
                 continue
@@ -91,7 +91,7 @@ def main(datasets_dir, superset_db_id, superset_refresh_columns, superset):
        
 
         ds={}
-        ds['table_name']=helpers.make_table_name(input_datasets[i]['name'], input_datasets[i]['tags'])
+        ds['table_name']=make_table_name(input_datasets[i]['name'], input_datasets[i]['tags'])
         ds['description']=input_datasets[i]['description']
         ds['sql']=input_datasets[i]['sql']
         #ds['filter_select_enabled']=filter_value_extraction.enable
