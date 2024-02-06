@@ -14,11 +14,17 @@ env:
 jobs:
   build:
     name: Create release
-    runs-on: ubuntu-latest
+    runs-on: python:3.10
     steps:
-        - name: Build
-          run: |
+      - name: gettime
+        run: date
+      - uses: actions/checkout@v3
+      - name: Build
+        run: |
             echo "Building release $IMAGE_TAG"
+            sed "s/0.0.0/$IMAGE_TAG/" pyproject.toml
+            poetry build
+        
 
 
 
