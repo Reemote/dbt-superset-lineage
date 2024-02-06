@@ -100,7 +100,7 @@ def merge_columns_info(dataset, dbt_tables, debug_dir):
     meta_new['cache_timeout'] = meta_dbt.get('bi_integration', {}).get('results_cache_timeout_seconds')
     meta_new['fetch_values_predicate'] = meta_dbt.get('bi_integration', {}).get('filter_value_extraction', {}).get('where')
     meta_new['filter_select_enabled'] = meta_dbt.get('bi_integration', {}).get('filter_value_extraction', {}).get('enable')
-    meta_new['main_dttm_col'] = meta_dbt.get('bi_integration', {}).get('main_timestamp_column')
+    meta_new['main_dttm_col'] = meta_dbt.get('bi_integration', {}).get('main_timestamp_column').upper()
     meta_new['owners'] = meta_dbt.get('owners', [])
 
     # Populate the dataset's `extra` field:

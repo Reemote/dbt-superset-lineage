@@ -96,14 +96,6 @@ docs = ["sphinx (>=3.5)", "jaraco.packaging (>=9.3)", "rst.linker (>=1.9)", "fur
 testing = ["pytest (>=6)", "pytest-checkdocs (>=2.4)", "pytest-cov", "pytest-enabler (>=2.2)", "pytest-ruff", "types-backports", "pytest-black (>=0.3.7)", "pytest-mypy (>=0.9.1)"]
 
 [[package]]
-name = "dbt"
-version = "1.0.0.35.15"
-description = "The dbt Cloud CLI - an ELT tool for running SQL transformations and data models in dbt Cloud."
-category = "main"
-optional = false
-python-versions = ">=3.8"
-
-[[package]]
 name = "diff-cover"
 version = "7.7.0"
 description = "Run coverage and linting reports on diffs"
@@ -454,7 +446,7 @@ testing = ["pytest (>=6)", "pytest-checkdocs (>=2.4)", "pytest-cov", "pytest-ena
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.8"
-content-hash = "17f0c08db79abba48ca29d17c2e6e3ffb293f4a986c5b76be95357f0161bb815"
+content-hash = "c571e33ff8ea87f42cdaebbfafcd7708953717b17fb6b92d15873b7f77f93451"
 
 [metadata.files]
 appdirs = []
@@ -467,7 +459,6 @@ charset-normalizer = []
 click = []
 colorama = []
 configparser = []
-dbt = []
 diff-cover = []
 exceptiongroup = []
 idna = []
