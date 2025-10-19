@@ -4,7 +4,6 @@ import os
 import re
 import copy
 
-
 from bs4 import BeautifulSoup
 from markdown import markdown
 
