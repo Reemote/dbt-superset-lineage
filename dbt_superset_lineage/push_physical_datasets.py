@@ -346,6 +346,7 @@ def main(dbt_project_dir, dbt_db_name, superset_db_id, superset_debug_dir, super
                     superset.refresh_dataset(sst_dataset_id)
                 sst_dataset_w_cols = superset.get_columns(sst_dataset_id)
                 sst_dataset_w_cols_new = merge_columns_info(sst_dataset_w_cols, dbt_tables, superset_debug_dir)
+                sst_dataset_w_cols_new = add_wall_time_columns(sst_dataset_w_cols_new)
                 logging.info(f"Old dataset {sst_dataset_w_cols}")
                 logging.info(f"New dataset {sst_dataset_w_cols}")
                 print(sst_dataset_w_cols_new)
