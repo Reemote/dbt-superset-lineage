@@ -246,7 +246,7 @@ def merge_columns_info(dataset, dbt_tables, debug_dir):
 def add_wall_time_columns(dataset):
     """
     Adds derived TIMESTAMP_NTZ 'wall time' columns for each TIMESTAMP_LTZ column in the dataset,
-    copying all properties from the original column except for column_name, expression, and verbose_name.
+    copying all properties from the original column except for column_name, expression, verbose_name, and type.
 
     Args:
         dataset (dict): A Superset dataset object with a 'columns_new' list.
@@ -279,6 +279,7 @@ def add_wall_time_columns(dataset):
             new_col['expression'] = f"{original_col_name}::timestamp_ntz"
             original_verbose_name = col.get('verbose_name', original_col_name)
             new_col['verbose_name'] = f"{original_verbose_name} (wall time)"
+            new_col['type'] = 'TIMESTAMP_NTZ'
 
             wt_columns.append(new_col)
 
