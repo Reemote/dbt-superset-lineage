@@ -299,6 +299,9 @@ def main(dbt_project_dir, dbt_db_name, superset_db_id, superset_debug_dir, super
                     superset.refresh_dataset(sst_dataset_id)
                 sst_dataset_w_cols = superset.get_columns(sst_dataset_id)
                 sst_dataset_w_cols_new = merge_columns_info(sst_dataset_w_cols, dbt_tables, superset_debug_dir)
+                logging.info(f"Old dataset {sst_dataset_w_cols}")
+                logging.info(f"New dataset {sst_dataset_w_cols}")
+                print(sst_dataset_w_cols_new)
                 superset.put_columns(sst_dataset_w_cols_new, superset_debug_dir)
             except Exception as e:
                 logging.error("The dataset named %s with ID=%d wasn't updated. Check the error below.",
