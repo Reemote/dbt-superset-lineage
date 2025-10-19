@@ -194,8 +194,6 @@ class Superset:
         body = dataset['meta_new']
         body['columns'] = dataset['columns_new']
 
-        logging.info(f"Columns in put_columns {dataset['columns_new']}")
-
         if debug_dir is not None:
             update_body_file_path = os.path.join(debug_dir, f'update_body__dataset_{id}.json')
             with open(update_body_file_path, 'w') as fp:
