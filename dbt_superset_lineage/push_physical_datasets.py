@@ -264,7 +264,7 @@ def add_wall_time_columns(dataset):
     for col in dataset['columns_new']:
         if col.get('type') == 'TIMESTAMP_LTZ':
             original_col_name = col['column_name']
-            wall_time_col_name = f"{original_col_name}_wt"
+            wall_time_col_name = f"{original_col_name}_WT"
 
             # Skip if the wall time column already exists
             if wall_time_col_name in existing_column_names:
