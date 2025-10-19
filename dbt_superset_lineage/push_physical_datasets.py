@@ -295,8 +295,6 @@ def main(dbt_project_dir, dbt_db_name, superset_db_id, superset_debug_dir, super
 
     sst_physical_datasets = filter_by_kind(sst_datasets, 'physical')
     logging.info("There are %d physical datasets in Superset.", len(sst_physical_datasets))
-    logging.info("Test")
-    logging.info(sst_physical_datasets)
 
     sst_virtual_datasets = filter_by_kind(sst_datasets, 'virtual')
     logging.info("There are %d virtual datasets in Superset.", len(sst_virtual_datasets))
@@ -348,9 +346,6 @@ def main(dbt_project_dir, dbt_db_name, superset_db_id, superset_debug_dir, super
                 sst_dataset_w_cols = superset.get_columns(sst_dataset_id)
                 sst_dataset_w_cols_new = merge_columns_info(sst_dataset_w_cols, dbt_tables, superset_debug_dir)
                 sst_dataset_w_cols_new = add_wall_time_columns(sst_dataset_w_cols_new)
-                logging.info(f"Old dataset {sst_dataset_w_cols}")
-                logging.info(f"New dataset {sst_dataset_w_cols}")
-                print(sst_dataset_w_cols_new)
                 superset.put_columns(sst_dataset_w_cols_new, superset_debug_dir)
             except Exception as e:
                 logging.error("The dataset named %s with ID=%d wasn't updated. Check the error below.",
