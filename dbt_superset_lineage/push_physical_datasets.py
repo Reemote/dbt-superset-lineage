@@ -260,7 +260,6 @@ def add_wall_time_columns(dataset):
     wt_columns = []
     existing_column_names = {col['column_name'] for col in dataset['columns_new']}
 
-    print(dataset)
     for col in dataset['columns_new']:
         if col.get('type') == 'TIMESTAMP_TZ':
             original_col_name = col['column_name']
