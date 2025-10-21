@@ -336,18 +336,17 @@ def main(dbt_project_dir, dbt_db_name, superset_db_id, superset_debug_dir, super
         sst_dataset_id = sst_physical_datasets[sst_dataset]['dataset_id']
 
         logging.info("Processing dataset ID: %d, name: %s.", sst_dataset_id, sst_dataset)
-        if sst_dataset_id == 1325:
-            # Only process datasets which exist in dbt:
-            if sst_dataset in dbt_tables:
-                try:
-                    if superset_refresh_columns:
-                        superset.refresh_dataset(sst_dataset_id)
-                    sst_dataset_w_cols = superset.get_columns(sst_dataset_id)
-                    sst_dataset_w_cols_new = merge_columns_info(sst_dataset_w_cols, dbt_tables, superset_debug_dir)
-                    sst_dataset_w_cols_new = add_wall_time_columns(sst_dataset_w_cols_new)
-                    superset.put_columns(sst_dataset_w_cols_new, superset_debug_dir)
-                except Exception as e:
-                    logging.error("The dataset named %s with ID=%d wasn't updated. Check the error below.",
-                                sst_dataset, sst_dataset_id, exc_info=e)
+        # Only process datasets which exist in dbt:
+        if sst_dataset in dbt_tables:
+            try:
+                if superset_refresh_columns:
+                    superset.refresh_dataset(sst_dataset_id)
+                sst_dataset_w_cols = superset.get_columns(sst_dataset_id)
+                sst_dataset_w_cols_new = merge_columns_info(sst_dataset_w_cols, dbt_tables, superset_debug_dir)
+                sst_dataset_w_cols_new = add_wall_time_columns(sst_dataset_w_cols_new)
+                superset.put_columns(sst_dataset_w_cols_new, superset_debug_dir)
+            except Exception as e:
+                logging.error("The dataset named %s with ID=%d wasn't updated. Check the error below.",
+                            sst_dataset, sst_dataset_id, exc_info=e)
 
-    logging.info("All done!")
+logging.info("All done!")
