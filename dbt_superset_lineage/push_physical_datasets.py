@@ -336,7 +336,7 @@ def main(dbt_project_dir, dbt_db_name, superset_db_id, superset_debug_dir, super
         sst_dataset_id = sst_physical_datasets[sst_dataset]['dataset_id']
 
         logging.info("Processing dataset ID: %d, name: %s.", sst_dataset_id, sst_dataset)
-        if sst_dataset_id == '1325':
+        if sst_dataset_id == 1325:
             # Only process datasets which exist in dbt:
             if sst_dataset in dbt_tables:
                 try:
