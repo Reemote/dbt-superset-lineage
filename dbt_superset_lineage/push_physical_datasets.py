@@ -2,6 +2,7 @@ import json
 import logging
 import os
 import re
+import copy
 
 from bs4 import BeautifulSoup
 from markdown import markdown
@@ -240,6 +241,52 @@ def merge_columns_info(dataset, dbt_tables, debug_dir):
 
     return dataset
 
+
+def add_wall_time_columns(dataset):
+    """
+    Adds derived TIMESTAMP_NTZ 'wall time' columns for each TIMESTAMP_LTZ column in the dataset,
+    copying all properties from the original column except for column_name, expression, verbose_name, and type.
+
+    Args:
+        dataset (dict): A Superset dataset object with a 'columns_new' list.
+
+    Returns:
+        dict: The updated dataset with new wall time columns appended.
+    """
+    if 'columns_new' not in dataset:
+        logging.warning("No 'columns_new' in dataset. Skipping wall time columns.")
+        return dataset
+
+    wt_columns = []
+    existing_column_names = {col['column_name'] for col in dataset['columns_new']}
+
+    for col in dataset['columns_new']:
+        if col.get('type') == 'TIMESTAMP_TZ':
+            original_col_name = col['column_name']
+            wall_time_col_name = f"{original_col_name}_WT"
+
+            # Skip if the wall time column already exists
+            if wall_time_col_name in existing_column_names:
+                logging.info(f"Wall time column {wall_time_col_name} already exists. Skipping.")
+                continue
+
+            # Copy everything from original column
+            new_col = copy.deepcopy(col)
+
+            # Override required fields
+            new_col['column_name'] = wall_time_col_name
+            new_col['expression'] = f"{original_col_name}::timestamp_ntz"
+            original_verbose_name = col.get('verbose_name', original_col_name)
+            new_col['verbose_name'] = f"{original_verbose_name} (wall time)"
+            new_col['type'] = 'TIMESTAMP_NTZ'
+
+            wt_columns.append(new_col)
+
+    dataset['columns_new'].extend(wt_columns)
+    logging.info(f"Added {len(wt_columns)} wall time columns.")
+    return dataset
+
+
 def main(dbt_project_dir, dbt_db_name, superset_db_id, superset_debug_dir, superset_refresh_columns, superset):
 
     logging.info("Getting datasets from Superset.")
@@ -289,7 +336,6 @@ def main(dbt_project_dir, dbt_db_name, superset_db_id, superset_debug_dir, super
         sst_dataset_id = sst_physical_datasets[sst_dataset]['dataset_id']
 
         logging.info("Processing dataset ID: %d, name: %s.", sst_dataset_id, sst_dataset)
-
         # Only process datasets which exist in dbt:
         if sst_dataset in dbt_tables:
             try:
@@ -297,9 +343,10 @@ def main(dbt_project_dir, dbt_db_name, superset_db_id, superset_debug_dir, super
                     superset.refresh_dataset(sst_dataset_id)
                 sst_dataset_w_cols = superset.get_columns(sst_dataset_id)
                 sst_dataset_w_cols_new = merge_columns_info(sst_dataset_w_cols, dbt_tables, superset_debug_dir)
+                sst_dataset_w_cols_new = add_wall_time_columns(sst_dataset_w_cols_new)
                 superset.put_columns(sst_dataset_w_cols_new, superset_debug_dir)
             except Exception as e:
                 logging.error("The dataset named %s with ID=%d wasn't updated. Check the error below.",
                             sst_dataset, sst_dataset_id, exc_info=e)
 
-    logging.info("All done!")
+logging.info("All done!")
