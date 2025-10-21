@@ -262,7 +262,7 @@ def add_wall_time_columns(dataset):
 
     print(dataset)
     for col in dataset['columns_new']:
-        if col.get('type').upper() == 'TIMESTAMP_TZ':
+        if col.get('type') == 'TIMESTAMP_TZ':
             original_col_name = col['column_name']
             wall_time_col_name = f"{original_col_name}_WT"
 
